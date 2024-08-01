@@ -1,15 +1,14 @@
 // lib/views/add_quote_view.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/QuoteController.dart';
-import '../modals/quote.dart';
-
+import 'package:pr_7_db_miner/controllers/QuoteController.dart';
+import 'package:pr_7_db_miner/modals/quote.dart';
 
 class AddQuoteView extends StatelessWidget {
   final QuoteController quoteController = Get.find();
   final TextEditingController quoteControllerText = TextEditingController();
-  final TextEditingController authorController = TextEditingController();
-  final TextEditingController categoryController = TextEditingController();
+  final TextEditingController authorControllerText = TextEditingController();
+  final TextEditingController categoryControllerText = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -26,22 +25,22 @@ class AddQuoteView extends StatelessWidget {
               decoration: InputDecoration(labelText: 'Quote'),
             ),
             TextField(
-              controller: authorController,
+              controller: authorControllerText,
               decoration: InputDecoration(labelText: 'Author'),
             ),
             TextField(
-              controller: categoryController,
+              controller: categoryControllerText,
               decoration: InputDecoration(labelText: 'Category'),
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                final quote = Quote(
+                final newQuote = Quote(
                   quote: quoteControllerText.text,
-                  author: authorController.text,
-                  category: categoryController.text,
+                  author: authorControllerText.text,
+                  category: categoryControllerText.text,
                 );
-                quoteController.addQuote(quote);
+                quoteController.addQuote(newQuote);
                 Get.back();
               },
               child: Text('Add Quote'),

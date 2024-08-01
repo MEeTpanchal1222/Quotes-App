@@ -1,6 +1,7 @@
 // lib/views/quote_detail_view.dart
 import 'package:flutter/material.dart';
-import '../modals/quote.dart';
+import 'package:get/get.dart';
+import 'package:pr_7_db_miner/modals/quote.dart';
 
 class QuoteDetailView extends StatelessWidget {
   final Quote quote;
@@ -11,28 +12,33 @@ class QuoteDetailView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Quote Detail'),
+        title: Text('Quote Details'),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               quote.quote,
-              style: TextStyle(fontSize: 24.0, fontStyle: FontStyle.italic),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 20),
             Text(
               '- ${quote.author}',
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18),
             ),
             SizedBox(height: 20),
             Text(
               'Category: ${quote.category}',
-              style: TextStyle(fontSize: 16.0),
+              style: TextStyle(fontSize: 18),
             ),
-            // Add more details and features here
+            Spacer(),
+            ElevatedButton(
+              onPressed: () {
+                // Implement quote wallpaper creation or sharing functionality here
+              },
+              child: Text('Create Wallpaper'),
+            ),
           ],
         ),
       ),

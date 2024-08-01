@@ -1,12 +1,16 @@
 // lib/controllers/quote_controller.dart
 import 'package:get/get.dart';
-import '../modals/quote.dart';
+import 'package:pr_7_db_miner/modals/quote.dart';
+import 'package:pr_7_db_miner/services/quote_api_service.dart';
 import '../services/database_helper.dart';
-import '../services/quote_api_service.dart';
 
 class QuoteController extends GetxController {
   var quotes = <Quote>[].obs;
+  var filteredQuotes = <Quote>[].obs;
   var isLoading = true.obs;
+  var selectedCategory = 'All'.obs;
+  var categories = <String>[].obs;
+  var authors = <String>[].obs;
 
   final DatabaseHelper databaseHelper = DatabaseHelper.instance;
   final ApiService apiService = ApiService();
@@ -20,19 +24,38 @@ class QuoteController extends GetxController {
   void fetchQuotes() async {
     isLoading(true);
     try {
+      // Fetch quotes from database
       var dbQuotes = await databaseHelper.getQuotes();
+      quotes.assignAll(dbQuotes);
+
+      // Fetch quotes from API
       var apiQuotes = await apiService.fetchQuotes();
 
-      // Insert API quotes into the database
+      // Insert API quotes into the database and assign to quotes list
       for (var quote in apiQuotes) {
         await databaseHelper.insert(quote);
       }
 
-      // Fetch quotes from the database again
+      // Fetch updated quotes from the database
       var allQuotes = await databaseHelper.getQuotes();
       quotes.assignAll(allQuotes);
+      filterQuotes(selectedCategory.value);
+
+      // Extract unique categories and authors
+      extractUniqueCategoriesAndAuthors();
+    } catch (e) {
+      // Handle errors appropriately
+      print("Error fetching quotes: $e");
     } finally {
       isLoading(false);
+    }
+  }
+
+  void filterQuotes(String category) {
+    if (category == 'All') {
+      filteredQuotes.assignAll(quotes);
+    } else {
+      filteredQuotes.assignAll(quotes.where((quote) => quote.category == category).toList());
     }
   }
 
@@ -50,5 +73,10 @@ class QuoteController extends GetxController {
   void deleteQuote(int id) async {
     await databaseHelper.delete(id);
     fetchQuotes();
+  }
+
+  void extractUniqueCategoriesAndAuthors() {
+    categories.assignAll(quotes.map((quote) => quote.category).toSet().toList());
+    authors.assignAll(quotes.map((quote) => quote.author).toSet().toList());
   }
 }
