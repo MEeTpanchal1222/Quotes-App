@@ -1,82 +1,160 @@
-// lib/controllers/quote_controller.dart
+// // controllers/quote_controller.dart
+// import 'package:get/get.dart';
+// import 'package:http/http.dart' as http;
+// import 'package:pr_7_db_miner/modals/quote.dart';
+// import 'dart:convert';
+//
+// import 'package:pr_7_db_miner/services/database_helper.dart';
+//
+// class QuoteController extends GetxController {
+//   var isLoading = true.obs;
+//   var quotes = <Quote>[].obs;
+//   var favoriteQuotes = <Quote>[].obs;
+//
+//   @override
+//   void onInit() {
+//     super.onInit();
+//     fetchQuotes();
+//     loadFavoriteQuotes();
+//   }
+//
+//   Future<void> fetchQuotes() async {
+//     try {
+//       isLoading(true);
+//       var response = await http.get(Uri.parse('https://sheetdb.io/api/v1/accmtecgjck1x'));
+//       if (response.statusCode == 200) {
+//         var data = json.decode(response.body);
+//         for (var item in data) {
+//           quotes.add(Quote.fromMap(item));
+//         }
+//       }
+//     } finally {
+//       isLoading(false);
+//     }
+//   }
+//
+//   Future<void> loadFavoriteQuotes() async {
+//     var dbQuotes = await DatabaseHelper().getLikedQuotes();
+//     favoriteQuotes.addAll(dbQuotes);
+//   }
+//
+//   void likeQuote(Quote quote) {
+//     if (quote.liked) {
+//       DatabaseHelper().deleteQuote(quote.id!);
+//       favoriteQuotes.remove(quote);
+//     } else {
+//       DatabaseHelper().insertQuote(quote);
+//       favoriteQuotes.add(quote);
+//     }
+//     quote.liked = !quote.liked;
+//     quotes.refresh();
+//     favoriteQuotes.refresh();
+//   }
+// }
+import 'dart:convert';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:pr_7_db_miner/modals/quote.dart';
-import 'package:pr_7_db_miner/services/quote_api_service.dart';
-import '../services/database_helper.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+import '../models/quote.dart';
 
 class QuoteController extends GetxController {
   var quotes = <Quote>[].obs;
-  var filteredQuotes = <Quote>[].obs;
-  var isLoading = true.obs;
-  var selectedCategory = 'All'.obs;
   var categories = <String>[].obs;
-  var authors = <String>[].obs;
+  var isLoading = true.obs;
 
-  final DatabaseHelper databaseHelper = DatabaseHelper.instance;
-  final ApiService apiService = ApiService();
+  late Database database;
 
   @override
   void onInit() {
-    fetchQuotes();
     super.onInit();
+    initDatabase();
+    fetchQuotes();
   }
 
-  void fetchQuotes() async {
+  Future<void> initDatabase() async {
+    var databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, 'quotes.db');
+
+    database = await openDatabase(
+      path,
+      version: 1,
+      onCreate: (Database db, int version) async {
+        await db.execute('''
+          CREATE TABLE Quotes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            text TEXT,
+            author TEXT,
+            category TEXT,
+            liked INTEGER
+          )
+        ''');
+      },
+    );
+  }
+
+  Future<void> fetchQuotes() async {
     isLoading(true);
-    try {
-      // Fetch quotes from database
-      var dbQuotes = await databaseHelper.getQuotes();
-      quotes.assignAll(dbQuotes);
 
-      // Fetch quotes from API
-      var apiQuotes = await apiService.fetchQuotes();
+    // Fetch from API
+    final response = await http.get(Uri.parse('https://sheetdb.io/api/v1/accmtecgjck1x'));
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      List<Quote> fetchedQuotes = data.map((item) => Quote.fromJson(item)).toList();
 
-      // Insert API quotes into the database and assign to quotes list
-      for (var quote in apiQuotes) {
-        await databaseHelper.insert(quote);
+      // Save quotes to the database
+      for (var quote in fetchedQuotes) {
+        await saveQuote(quote);
       }
 
-      // Fetch updated quotes from the database
-      var allQuotes = await databaseHelper.getQuotes();
-      quotes.assignAll(allQuotes);
-      filterQuotes(selectedCategory.value);
-
-      // Extract unique categories and authors
-      extractUniqueCategoriesAndAuthors();
-    } catch (e) {
-      // Handle errors appropriately
-      print("Error fetching quotes: $e");
-    } finally {
-      isLoading(false);
-    }
-  }
-
-  void filterQuotes(String category) {
-    if (category == 'All') {
-      filteredQuotes.assignAll(quotes);
+      // Load quotes from the database
+      await loadQuotesFromDatabase();
     } else {
-      filteredQuotes.assignAll(quotes.where((quote) => quote.category == category).toList());
+      throw Exception('Failed to load quotes from API');
     }
+
+    isLoading(false);
   }
 
-  void toggleFavoriteStatus(Quote quote) async {
-    quote.isFavorite = !quote.isFavorite;
-    await databaseHelper.update(quote);
-    fetchQuotes();
+  Future<void> loadQuotesFromDatabase() async {
+    final List<Map<String, dynamic>> maps = await database.query('Quotes');
+
+    quotes.value = List.generate(maps.length, (i) {
+      return Quote(
+        text: maps[i]['text'],
+        author: maps[i]['author'],
+        category: maps[i]['category'],
+        liked: maps[i]['liked'] == 1,
+      );
+    });
+
+    // Populate categories
+    categories.value = quotes.map((quote) => quote.category).toSet().toList();
   }
 
-  void addQuote(Quote quote) async {
-    await databaseHelper.insert(quote);
-    fetchQuotes();
+  Future<void> likeQuote(Quote quote) async {
+    quote.liked = !quote.liked;
+    quotes.refresh();
+
+    await database.update(
+      'Quotes',
+      {'liked': quote.liked ? 1 : 0},
+      where: 'text = ?',
+      whereArgs: [quote.text],
+    );
   }
 
-  void deleteQuote(int id) async {
-    await databaseHelper.delete(id);
-    fetchQuotes();
-  }
-
-  void extractUniqueCategoriesAndAuthors() {
-    categories.assignAll(quotes.map((quote) => quote.category).toSet().toList());
-    authors.assignAll(quotes.map((quote) => quote.author).toSet().toList());
+  Future<void> saveQuote(Quote quote) async {
+    await database.insert(
+      'Quotes',
+      {
+        'text': quote.text,
+        'author': quote.author,
+        'category': quote.category,
+        'liked': quote.liked ? 1 : 0,
+      },
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 }

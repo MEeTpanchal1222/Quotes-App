@@ -1,70 +1,70 @@
-// lib/services/database_helper.dart
+// helpers/database_helper.dart
 import 'package:pr_7_db_miner/modals/quote.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-  static final DatabaseHelper instance = DatabaseHelper._init();
-  static Database? _database;
+  static final DatabaseHelper _instance = DatabaseHelper._internal();
 
-  DatabaseHelper._init();
+  factory DatabaseHelper() {
+    return _instance;
+  }
+
+  DatabaseHelper._internal();
+
+  static Database? _database;
 
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDB('quotes.db');
+    _database = await _initDatabase();
     return _database!;
   }
 
-  Future<Database> _initDB(String filePath) async {
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, filePath);
-
-    return await openDatabase(path, version: 1, onCreate: _createDB);
-  }
-
-  Future _createDB(Database db, int version) async {
-    const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
-    const textType = 'TEXT NOT NULL';
-    const boolType = 'BOOLEAN NOT NULL';
-
-    await db.execute('''
-    CREATE TABLE quotes (
-      id $idType,
-      quote $textType,
-      author $textType,
-      category $textType,
-      isFavorite $boolType
-    )
-    ''');
-  }
-  Future<Quote> insert(Quote quote) async {
-    final db = await instance.database;
-    final id = await db.insert('quotes', quote.toMap());
-    return quote.copy(id: id);
-  }
-
-  Future<List<Quote>> getQuotes() async {
-    final db = await instance.database;
-    final result = await db.query('quotes');
-    return result.map((json) => Quote.fromMap(json)).toList();
-  }
-
-  Future<int> update(Quote quote) async {
-    final db = await instance.database;
-    return db.update(
-      'quotes',
-      quote.toMap(),
-      where: 'id = ?',
-      whereArgs: [quote.id],
+  Future<Database> _initDatabase() async {
+    String path = join(await getDatabasesPath(), 'quotes.db');
+    return await openDatabase(
+      path,
+      version: 1,
+      onCreate: _onCreate,
     );
   }
 
-  Future<int> delete(int id) async {
-    final db = await instance.database;
-    return await db.delete(
-      'quotes',
+  Future<void> _onCreate(Database db, int version) async {
+    await db.execute(
+      'CREATE TABLE liked_quotes(id INTEGER PRIMARY KEY, text TEXT, author TEXT, cate TEXT, liked INTEGER)',
+    );
+  }
+
+  Future<void> insertQuote(Quote quote) async {
+    final db = await database;
+    await db.insert(
+      'liked_quotes',
+      quote.toJson(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<void> deleteQuote(int id) async {
+    final db = await database;
+    await db.delete(
+      'liked_quotes',
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  Future<List<Quote>> getLikedQuotes() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('liked_quotes');
+
+    return List.generate(maps.length, (i) {
+      return Quote(
+        id: maps[i]['id'],
+        text: maps[i]['quote'],
+        author: maps[i]['author'],
+        category: maps[i]['cate'],
+        liked: maps[i]['liked'] == 1,
+      );
+    });
   }
 }

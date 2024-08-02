@@ -1,44 +1,67 @@
-// lib/models/quote.dart
+// // models/quote.dart
+// class Quote {
+//   int? id;
+//   String quote;
+//   String author;
+//   String category;
+//   bool liked;
+//
+//   Quote({
+//     this.id,
+//     required this.quote,
+//     required this.author,
+//     required this.category,
+//     this.liked = false,
+//   });
+//
+//   factory Quote.fromMap(Map<String, dynamic> json) => Quote(
+//     id: json["id"],
+//     quote: json["quote"],
+//     author: json["author"],
+//     category: json["cate"],
+//     liked: json["like"] == "1",
+//   );
+//
+//   Map<String, dynamic> toMap() => {
+//     "id": id,
+//     "quote": quote,
+//     "author": author,
+//     "category": category,
+//     "liked": liked ? 1 : 0,
+//   };
+// }
+
+
 class Quote {
   int? id;
-  String quote;
+  String text;
   String author;
   String category;
-  bool isFavorite;
+  bool liked;
 
   Quote({
     this.id,
-    required this.quote,
+    required this.text,
     required this.author,
     required this.category,
-    this.isFavorite = false,
+    this.liked = false, required quote,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'quote': quote,
-      'author': author,
-      'category': category,
-      'isFavorite': isFavorite ? 1 : 0,
-    };
-  }
-
-  factory Quote.fromMap(Map<String, dynamic> map) {
+  factory Quote.fromJson(Map<String, dynamic> json) {
     return Quote(
-      id: map['id'],
-      quote: map['quote'],
-      author: map['author'],
-      category: map['category'],
-      isFavorite: map['isFavorite'] == 1,
+      text: json['quote'],
+      author: json['author'],
+      category: json['cate'],
+      liked: json['like'] == '1',
     );
   }
 
-  Quote copy({int? id}) => Quote(
-    id: id ?? this.id,
-    quote: this.quote,
-    author: this.author,
-    category: this.category,
-    isFavorite: this.isFavorite,
-  );
+  Map<String, dynamic> toJson() {
+    return {
+      'text': text,
+      'author': author,
+      'category': category,
+      'liked': liked ? '1' : '0',
+    };
+  }
 }
