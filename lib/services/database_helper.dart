@@ -1,70 +1,60 @@
-// helpers/database_helper.dart
-import 'package:pr_7_db_miner/modals/quote.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-  static final DatabaseHelper _instance = DatabaseHelper._internal();
-
-  factory DatabaseHelper() {
-    return _instance;
-  }
-
-  DatabaseHelper._internal();
-
+  static final DatabaseHelper instance = DatabaseHelper._init();
   static Database? _database;
+
+  DatabaseHelper._init();
 
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDatabase();
+    _database = await _initDB('quotes.db');
     return _database!;
   }
 
-  Future<Database> _initDatabase() async {
-    String path = join(await getDatabasesPath(), 'quotes.db');
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _onCreate,
+  Future<Database> _initDB(String filePath) async {
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, filePath);
+    return await openDatabase(path, version: 1, onCreate: _createDB);
+  }
+
+  Future _createDB(Database db, int version) async {
+    await db.execute('''
+       CREATE TABLE quotes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      text TEXT NOT NULL,
+      author TEXT NOT NULL,
+      cate TEXT NOT NULL,
+      liked TEXT NOT NULL
+    )
+    ''');
+  }
+
+  Future<void> insertQuote(Database db, String cate, String text, String author, String liked) async {
+    await db.rawInsert('''
+    INSERT INTO quotes (cate, id, text, author, liked) VALUES (?, NULL, ?, ?, ?)
+  ''', [cate, text, author, liked]);
+  }
+
+  Future<int> deleteQuote(String text) async {
+    final db = await instance.database;
+    return await db.delete('quotes', where: 'text = ?', whereArgs: [text]);
+  }
+
+  Future<List<Map<String, dynamic>>> getLikedQuotes() async {
+    final db = await instance.database;
+    return await db.query('quotes', where: 'liked = ?', whereArgs: [1]);
+  }
+
+  Future<List<Map<String, dynamic>>> getLikedcateQuotes(String cate) async {
+    final db = await instance.database;
+    return await db.query(
+      'quotes',
+      where: 'liked = ? AND category = ?',
+      whereArgs: [1, cate],
     );
   }
 
-  Future<void> _onCreate(Database db, int version) async {
-    await db.execute(
-      'CREATE TABLE liked_quotes(id INTEGER PRIMARY KEY, text TEXT, author TEXT, cate TEXT, liked INTEGER)',
-    );
-  }
-
-  Future<void> insertQuote(Quote quote) async {
-    final db = await database;
-    await db.insert(
-      'liked_quotes',
-      quote.toJson(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-  }
-
-  Future<void> deleteQuote(int id) async {
-    final db = await database;
-    await db.delete(
-      'liked_quotes',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
-  }
-
-  Future<List<Quote>> getLikedQuotes() async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('liked_quotes');
-
-    return List.generate(maps.length, (i) {
-      return Quote(
-        id: maps[i]['id'],
-        text: maps[i]['quote'],
-        author: maps[i]['author'],
-        category: maps[i]['cate'],
-        liked: maps[i]['liked'] == 1,
-      );
-    });
-  }
 }
+

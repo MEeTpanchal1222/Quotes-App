@@ -1,67 +1,29 @@
-// // models/quote.dart
-// class Quote {
-//   int? id;
-//   String quote;
-//   String author;
-//   String category;
-//   bool liked;
-//
-//   Quote({
-//     this.id,
-//     required this.quote,
-//     required this.author,
-//     required this.category,
-//     this.liked = false,
-//   });
-//
-//   factory Quote.fromMap(Map<String, dynamic> json) => Quote(
-//     id: json["id"],
-//     quote: json["quote"],
-//     author: json["author"],
-//     category: json["cate"],
-//     liked: json["like"] == "1",
-//   );
-//
-//   Map<String, dynamic> toMap() => {
-//     "id": id,
-//     "quote": quote,
-//     "author": author,
-//     "category": category,
-//     "liked": liked ? 1 : 0,
-//   };
-// }
-
-
 class Quote {
   int? id;
   String text;
   String author;
-  String category;
-  bool liked;
+  String cate;
+  String liked;
 
-  Quote({
-    this.id,
-    required this.text,
-    required this.author,
-    required this.category,
-    this.liked = false, required quote,
-  });
+  Quote({this.id, required this.text, required this.author,required this.liked,required this.cate });
 
-  factory Quote.fromJson(Map<String, dynamic> json) {
-    return Quote(
-      text: json['quote'],
-      author: json['author'],
-      category: json['cate'],
-      liked: json['like'] == '1',
-    );
-  }
-
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
+      'cate':cate,
+      'id': id,
       'text': text,
       'author': author,
-      'category': category,
-      'liked': liked ? '1' : '0',
+      'liked': liked ,
     };
+  }
+
+  factory Quote.fromMap(Map<String, dynamic> map) {
+    return Quote(
+      id: map['id'],
+      cate: map['cate'],
+      text: map['quote'],
+      author: map['author'],
+      liked: map['like'],
+    );
   }
 }
