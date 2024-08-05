@@ -26,7 +26,26 @@ Response Format:
 }
 ```
 ##  Screenshots  ##
-Add screenshots of your app here to showcase its UI and features.
+<img src = "https://github.com/user-attachments/assets/9ca50bb9-417b-4621-943b-5fd4f3312a95" width = "200" />
+<img src = "https://github.com/user-attachments/assets/ead7d29f-dea6-42ea-8a6e-963d22eb00d3" width = "200" />
+<img src = "https://github.com/user-attachments/assets/69726067-8f4e-4276-b56b-d2ff14f3ac11" width = "200" />
+<img src = "https://github.com/user-attachments/assets/174dc24d-8879-41fc-8c08-dd84467a83f7" width = "200" />
+
+<img src = "https://github.com/user-attachments/assets/81fcd4c2-315f-4e9b-8732-48db663abd44" width = "200" />
+<img src = "https://github.com/user-attachments/assets/7b064358-666d-47a8-b886-d63ed9310bcd" width = "200" />
+<img src = "https://github.com/user-attachments/assets/9c4a1a8b-26b7-4b7f-9388-1644cc60490f" width = "200" />
+<img src = "https://github.com/user-attachments/assets/d9dc373b-310c-4ea4-8b71-dfb80e30d2e0" width = "200" />
+<img src = "https://github.com/user-attachments/assets/2cb94c58-6e2c-4dc9-a51b-4f9a2cf40bf7" width = "200" />
+<img src = "https://github.com/user-attachments/assets/e252e40e-129a-45b6-9524-e3db724582c9" width = "200" />
+<img src = "https://github.com/user-attachments/assets/2451f009-a0f2-474e-b8de-e1092fde09fe" width = "200" />
+<img src = "https://github.com/user-attachments/assets/a5029d36-ccb5-418e-9ea5-7e160f2c993d" width = "200" />
+<img src = "https://github.com/user-attachments/assets/437c9513-e942-44d7-94d3-1922d60a2cd6" width = "200" />
+<img src = "https://github.com/user-attachments/assets/bceebc34-af3d-4a8b-be6f-3cbc1d2a4e6d" width = "200" />
+<img src = "https://github.com/user-attachments/assets/8a96a33b-b1b8-4c70-ae14-91bb702ff802" width = "200" />
+<img src = "https://github.com/user-attachments/assets/81f26d28-05de-4d22-84c0-726272e182f3" width = "200" />
+<img src = "https://github.com/user-attachments/assets/1c204a0b-9a55-46c9-b73f-d9a3d2b1ec72" width = "200" />
+
+
 
 ##  Video  ##
 
