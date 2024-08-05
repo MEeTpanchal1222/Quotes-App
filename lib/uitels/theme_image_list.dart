@@ -10,31 +10,31 @@ List Images=[
 
 List Images2=[
 
-  "assets/image1.jpeg",
-  "assets/image2.jpeg",
-  "assets/image3.jpeg",
-  "assets/image4.jpeg",
-  "assets/image5.jpeg",
+  "assets/img1.jpg",
+  "assets/img2.jpg",
+  "assets/img3.jpg",
+  "assets/img4.jpg",
+  "assets/img5.jpg",
 
 
 ];
 
 List Images3=[
 
-  "assets/photo1.jpeg",
-  "assets/photo2.jpeg",
-  "assets/photo3.jpeg",
-  "assets/photo4.jpeg",
-  "assets/photo5.jpeg",
+  "assets/sucses1.png",
+  "assets/sucses2.jpg",
+  "assets/sucses3.jpg",
+  "assets/sucses4.jpg",
+  "assets/sucses5.jpg",
 
 
 ];
 
 List Images4=[
-  "assets/wall1.jpeg",
-  "assets/wall2.jpeg",
-  "assets/wall3.jpeg",
-  "assets/wall4.jpeg",
-  "assets/wall5.jpeg",
+  "assets/wall1.jpg",
+  "assets/wall2.jpg",
+  "assets/wall3.jpg",
+  "assets/wall4.jpg",
+  "assets/wall5.jpg"
 
 ];

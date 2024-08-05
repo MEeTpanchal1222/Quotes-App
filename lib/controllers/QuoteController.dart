@@ -59,6 +59,8 @@ class QuotesController extends GetxController {
       DatabaseHelper.instance.getLikedQuotes();
       quote.liked = "0";
       favoriteQuotes.remove(quote);
+      favoriteQuotes.refresh();
+      update();
     } else {
       final db = await DatabaseHelper.instance.database;
       await DatabaseHelper.instance.insertQuote(db,quote.cate,quote.text,quote.author,quote.liked);

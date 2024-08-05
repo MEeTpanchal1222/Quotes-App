@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeController extends GetxController {
   var isDarkMode = false.obs;
-  RxString selectedImage = 'assets/image4.jpeg'.obs; // Initialize with an empty string
+  RxString selectedImage = 'assets/img4.jpg'.obs; // Initialize with an empty string
 
   @override
   void onInit() {

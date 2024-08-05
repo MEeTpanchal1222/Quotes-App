@@ -19,7 +19,7 @@ class CategoryScreen2 extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.purple.shade50,
+        backgroundColor: Colors.greenAccent.shade100,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -27,11 +27,11 @@ class CategoryScreen2 extends StatelessWidget {
           icon: Icon(CupertinoIcons.multiply),
         ),
         title: Text(
-          '{$category}',
-          style: GoogleFonts.lato(color: Colors.purple, fontWeight: FontWeight.bold),
+          '$category',
+          style: GoogleFonts.lato(color: Colors.black, fontWeight: FontWeight.bold),
         ),
       ),
-      backgroundColor: Colors.purple.shade50,
+      backgroundColor: Colors.greenAccent.shade100,
       body: ListView.builder(
         itemCount: filteredQuotes.length,
         itemBuilder: (context, index) => Center(
@@ -41,7 +41,7 @@ class CategoryScreen2 extends StatelessWidget {
               height: 300,
               width: 350,
               decoration: BoxDecoration(
-                color: Colors.purple,
+                color: Colors.yellow.shade50,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Center(
@@ -49,7 +49,7 @@ class CategoryScreen2 extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 20, right: 20),
                   child: Text(
                     filteredQuotes[index].text,
-                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    style: TextStyle(color: Colors.green.shade900, fontSize: 25),
                   ),
                 ),
               ),

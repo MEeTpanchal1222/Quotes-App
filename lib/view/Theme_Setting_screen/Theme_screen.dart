@@ -15,7 +15,7 @@ class ThemeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.purple.shade50,
+        backgroundColor: Colors.greenAccent.shade100,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -24,22 +24,22 @@ class ThemeScreen extends StatelessWidget {
         ),
         title: Text(
           'Themes',
-          style: GoogleFonts.lato(color: Colors.purple,fontWeight: FontWeight.bold),
+          style: GoogleFonts.lato(color: Colors.black,fontWeight: FontWeight.bold),
 
         ),
       ),
-      backgroundColor: Colors.purple.shade50,
+      backgroundColor: Colors.greenAccent.shade100,
       body: SingleChildScrollView(
         child: Column(
           children: [
             sectionTitle('Colors'),
             themePhoto(Images, context, themeController),
-            sectionTitle('Wallpaper'),
+            sectionTitle('Themes'),
             themePhoto(Images2, context, themeController),
-            sectionTitle('Natural'),
-            themePhoto(Images3, context, themeController),
             sectionTitle('Themes'),
             themePhoto(Images3, context, themeController),
+            sectionTitle('Themes'),
+            themePhoto(Images4, context, themeController),
           ],
         ),
       ),
@@ -82,7 +82,7 @@ class ThemeScreen extends StatelessWidget {
           child: Text(
             title,
             style: TextStyle(
-              color: Colors.purple,
+              color: Colors.green.shade900,
               fontSize: 20,
             ),
           ),

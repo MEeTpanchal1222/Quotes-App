@@ -59,18 +59,21 @@ class HomeScreen extends StatelessWidget {
                                     Padding(
                                       padding: const EdgeInsets.all(50),
                                       child: Text(
-                                        '${quotesController.quotes[index].text}',
+                                        '‟ ${quotesController.quotes[index].text} ” ',
                                         style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 21,
+                                          fontSize: 28,
+                                          fontWeight:
+                                            FontWeight.w600
                                         ),
                                       ),
                                     ),
                                     Text(
-                                      '${quotesController.quotes[index].author}',
+                                      ' ~ ${quotesController.quotes[index].author}',
                                       style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 20,
+                                        color: Colors.white70,
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.w900
                                       ),
                                     ),
                                     SizedBox(
@@ -110,7 +113,7 @@ class HomeScreen extends StatelessWidget {
                                               Clipboard.setData(
                                                   ClipboardData(text: '${quotesController.quotes[index].text} - ${quotesController.quotes[index].author}'));
                                               Get.snackbar(
-                                                backgroundColor: Colors.white,
+                                                backgroundColor: Colors.yellow.shade100,
                                                 'Copied',
                                                 'Quote copied to clipboard',
                                                 snackPosition: SnackPosition.BOTTOM,

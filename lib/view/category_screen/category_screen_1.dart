@@ -17,7 +17,7 @@ class CategoryScreen1 extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.purple.shade50,
+        backgroundColor: Colors.greenAccent.shade100,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -26,10 +26,10 @@ class CategoryScreen1 extends StatelessWidget {
         ),
         title: Text(
           'Categories',
-          style: GoogleFonts.lato(color: Colors.purple, fontWeight: FontWeight.bold),
+          style: GoogleFonts.lato(color: Colors.black, fontWeight: FontWeight.bold),
         ),
       ),
-      backgroundColor: Colors.purple.shade50,
+      backgroundColor:  Colors.greenAccent.shade100,
       body: GridView.builder(
         shrinkWrap: true,
         padding: const EdgeInsets.all(10),
@@ -50,13 +50,13 @@ class CategoryScreen1 extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: Colors.white,
+                color: Colors.yellow.shade50,
               ),
               child: Center(
                 child: Text(
                   category[index],
                   style: TextStyle(
-                    color: Colors.purple,
+                    color: Colors.green.shade900,
                     fontSize: 20,
                   ),
                 ),

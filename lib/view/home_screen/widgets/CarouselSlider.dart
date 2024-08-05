@@ -80,6 +80,7 @@ Widget buildCarouselSlider() {
               pageSnapping: true,
               initialPage: 0,
               enlargeCenterPage: true,
+              aspectRatio: BorderSide.strokeAlignInside,
             ),
 
           );
