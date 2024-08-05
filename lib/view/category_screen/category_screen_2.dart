@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pr_7_db_miner/controllers/QuoteController.dart';
+import 'package:share_plus/share_plus.dart';
 
 class CategoryScreen2 extends StatelessWidget {
   final String category;
@@ -47,9 +49,56 @@ class CategoryScreen2 extends StatelessWidget {
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: Text(
-                    filteredQuotes[index].text,
-                    style: TextStyle(color: Colors.green.shade900, fontSize: 25),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        filteredQuotes[index].text,
+                        style: TextStyle(color: Colors.green.shade900, fontSize: 25),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Share.share('${quotesController.quotes[index].text} - ${quotesController.quotes[index].author}');
+                            },
+                            icon: Icon(
+                              CupertinoIcons.share,
+                              color: Colors.green.shade900,
+                              size: 30,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 30,
+                          ),
+                          IconButton(
+                            icon: Icon(quotesController.quotes[index].liked == "1" ? Icons.favorite : Icons.favorite_border,
+                              color: quotesController.quotes[index].liked == "1" ? Colors.red : Colors.green.shade900,
+                              size: 30,),
+                            onPressed: () {
+                              quotesController.likeQuote(quotesController.quotes[index]);
+                            },
+                          ),
+                          SizedBox(
+                            width: 30,
+                          ),
+
+                          IconButton(
+                              icon: Icon(Icons.copy_rounded,color: Colors.green.shade900,size: 30,),
+                              onPressed: () {
+                                Clipboard.setData(
+                                    ClipboardData(text: '${quotesController.quotes[index].text} - ${quotesController.quotes[index].author}'));
+                                Get.snackbar(
+                                  backgroundColor: Colors.yellow.shade100,
+                                  'Copied',
+                                  'Quote copied to clipboard',
+                                  snackPosition: SnackPosition.BOTTOM,
+                                );}),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),

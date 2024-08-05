@@ -13,7 +13,7 @@ class QuotesController extends GetxController {
   RxString errorMessage = ''.obs;
   RxList<Quote> favoriteQuotes = <Quote>[].obs;
   Set<String> categories = {};
-  var love=false.obs;
+
 
 
   @override
