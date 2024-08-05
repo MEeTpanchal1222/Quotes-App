@@ -29,7 +29,11 @@ Response Format:
 Add screenshots of your app here to showcase its UI and features.
 
 ##  Video  ##
-Add screenshots of your app here to showcase its UI and features.
+
+
+
+https://github.com/user-attachments/assets/d9d825da-8282-44be-9421-14489400c0f6
+
 
 
 ## Dependencies ##
